@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Bot, Loader2, ThumbsUp, ShieldAlert, Sparkles, Workflow, GitBranch, KeySquare } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { Bot, Loader2, Sparkles, Workflow, GitBranch, KeySquare } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,6 +16,8 @@ import { type OptimizePaymentTermsOutput } from '@/ai/flows/optimize-payment-ter
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
+import { partners } from '@/lib/placeholder-data';
+
 
 const FormSchema = z.object({
   partnerRiskProfile: z
@@ -27,10 +30,26 @@ const FormSchema = z.object({
 
 type FormData = z.infer<typeof FormSchema>;
 
+// Helper to generate placeholder text from partner data
+const generateRiskProfilePlaceholder = (partner: any) => {
+  if (!partner) return "e.g., Credit score: 750, Industry: Stable tech sector, Financial health: Positive cash flow...";
+  return `Industry: ${partner.industry}. Status: ${partner.status}. Joined on: ${partner.joinedDate}. A solid partner with a good standing.`;
+}
+
+const generateTransactionHistoryPlaceholder = (partner: any) => {
+    if (!partner) return "e.g., Consistent on-time payments, average transaction $5,000, 3 years of partnership...";
+    return `Partner since ${partner.joinedDate}. Consistently reliable. No major issues reported in transaction history.`;
+}
+
+
 export default function OptimizePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<OptimizePaymentTermsOutput | null>(null);
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const partnerId = searchParams.get('partnerId');
+  
+  const partner = partners.find(p => p.id === partnerId);
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
@@ -39,6 +58,14 @@ export default function OptimizePage() {
       transactionHistory: '',
     },
   });
+
+  useEffect(() => {
+    if (partner) {
+      form.setValue('partnerRiskProfile', generateRiskProfilePlaceholder(partner));
+      form.setValue('transactionHistory', generateTransactionHistoryPlaceholder(partner));
+    }
+  }, [partner, form]);
+
 
   async function onSubmit(data: FormData) {
     setIsLoading(true);
@@ -77,8 +104,8 @@ export default function OptimizePage() {
         </div>
         <div>
           <h1 className="text-3xl font-bold">AI Workflow Architect</h1>
-          <p className="text-muted-foreground">
-            Generate custom, state machine-based payment workflows using AI.
+           <p className="text-muted-foreground">
+            {partner ? `Generating a custom workflow for ${partner.companyName}.` : "Generate custom, state machine-based payment workflows using AI."}
           </p>
         </div>
       </div>
@@ -87,7 +114,7 @@ export default function OptimizePage() {
         <Card>
           <CardHeader>
             <CardTitle>Partner Data Input</CardTitle>
-            <CardDescription>Provide the necessary information for analysis.</CardDescription>
+            <CardDescription>Review the partner data used for AI analysis.</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -100,7 +127,7 @@ export default function OptimizePage() {
                       <FormLabel>Partner Risk Profile</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="e.g., Credit score: 750, Industry: Stable tech sector, Financial health: Positive cash flow..."
+                          placeholder={generateRiskProfilePlaceholder(partner)}
                           className="min-h-[120px]"
                           {...field}
                         />
@@ -117,7 +144,7 @@ export default function OptimizePage() {
                       <FormLabel>Transaction History</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="e.g., Consistent on-time payments, average transaction $5,000, 3 years of partnership..."
+                           placeholder={generateTransactionHistoryPlaceholder(partner)}
                           className="min-h-[120px]"
                           {...field}
                         />
