@@ -52,7 +52,7 @@ export default function SettingsPage() {
           Manage your account, users, and application settings.
         </p>
       </div>
-      <Tabs defaultValue="users">
+      <Tabs defaultValue="workflows">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="users">Users & Roles</TabsTrigger>
@@ -219,3 +219,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+    
