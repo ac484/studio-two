@@ -1,0 +1,209 @@
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { users } from '@/lib/placeholder-data';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { MoreHorizontal, PlusCircle, Settings, Bell, CreditCard } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+
+export default function SettingsPage() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold">Settings</h1>
+        <p className="text-muted-foreground">
+          Manage your account, users, and application settings.
+        </p>
+      </div>
+      <Tabs defaultValue="users">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="profile">Profile</TabsTrigger>
+          <TabsTrigger value="users">Users & Roles</TabsTrigger>
+          <TabsTrigger value="workflows">Workflows</TabsTrigger>
+          <TabsTrigger value="notifications">Notifications</TabsTrigger>
+        </TabsList>
+        <TabsContent value="profile">
+          <Card>
+            <CardHeader>
+              <CardTitle>My Profile</CardTitle>
+              <CardDescription>Update your personal information.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="name">Full Name</label>
+                <Input id="name" defaultValue={users[0].name} />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="email">Email</label>
+                <Input id="email" type="email" defaultValue={users[0].email} disabled />
+              </div>
+              <Button>Save Changes</Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="users">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>User Management</CardTitle>
+                <CardDescription>Invite and manage team members.</CardDescription>
+              </div>
+              <Button>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Invite User
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>User</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {users.map((user) => (
+                    <TableRow key={user.id}>
+                      <TableCell className="flex items-center gap-4">
+                        <Avatar>
+                          <AvatarImage src={user.avatarUrl} data-ai-hint="people avatar" />
+                          <AvatarFallback>
+                            {user.name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium">{user.name}</p>
+                          <p className="text-sm text-muted-foreground">{user.email}</p>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Select defaultValue={user.role}>
+                          <SelectTrigger className="w-[120px]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Admin">Admin</SelectItem>
+                            <SelectItem value="Manager">Manager</SelectItem>
+                            <SelectItem value="Viewer">Viewer</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <DropdownMenuItem className="text-destructive">Remove</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="workflows">
+          <Card>
+             <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Payment Workflows</CardTitle>
+                <CardDescription>Automate your payment processes.</CardDescription>
+              </div>
+              <Button>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                New Workflow
+              </Button>
+            </CardHeader>
+            <CardContent className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <Card>
+                <CardHeader className="flex-row items-center gap-4">
+                  <CreditCard className="h-8 w-8 text-primary" />
+                  <CardTitle>Standard Net 30</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">Payment due 30 days after invoice. Automated reminders at 15 and 3 days before due date.</p>
+                </CardContent>
+              </Card>
+               <Card>
+                <CardHeader className="flex-row items-center gap-4">
+                  <CreditCard className="h-8 w-8 text-primary" />
+                  <CardTitle>Upfront Payment</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">Requires full payment before services are rendered. Ideal for new partners.</p>
+                </CardContent>
+              </Card>
+               <Card>
+                <CardHeader className="flex-row items-center gap-4">
+                  <CreditCard className="h-8 w-8 text-primary" />
+                  <CardTitle>Milestone-Based</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">Payments are triggered upon completion of project milestones. Good for long-term projects.</p>
+                </CardContent>
+              </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="notifications">
+           <Card>
+            <CardHeader>
+              <CardTitle>Notification Settings</CardTitle>
+              <CardDescription>Manage how you receive alerts.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+               <div className="flex items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <p className="font-medium">Email Notifications</p>
+                    <p className="text-sm text-muted-foreground">Receive alerts for overdue payments and new transactions.</p>
+                  </div>
+                  <Button size="sm">Enable</Button>
+               </div>
+                <div className="flex items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <p className="font-medium">Push Notifications</p>
+                    <p className="text-sm text-muted-foreground">Get real-time updates on your mobile device.</p>
+                  </div>
+                  <Button variant="secondary" size="sm">Coming Soon</Button>
+               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
