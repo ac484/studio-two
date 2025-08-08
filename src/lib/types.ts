@@ -8,6 +8,16 @@ export interface Partner {
   industry: string;
 }
 
+export interface Invoice {
+  id: string;
+  partnerId: string;
+  partnerName:string;
+  amount: number;
+  status: 'Paid' | 'Pending' | 'Overdue' | 'Draft';
+  dueDate: string;
+  issueDate: string;
+}
+
 export interface Transaction {
   id: string;
   partnerId: string;

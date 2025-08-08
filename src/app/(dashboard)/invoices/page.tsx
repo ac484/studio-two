@@ -1,3 +1,7 @@
+
+'use client';
+
+import * as React from 'react';
 import {
   Card,
   CardContent,
@@ -24,22 +28,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { transactions } from '@/lib/placeholder-data';
+import { MoreHorizontal, File, ListFilter, PlusCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { MoreHorizontal, File, ListFilter } from 'lucide-react';
-import { type Transaction } from '@/lib/types';
+import { type Invoice } from '@/lib/types';
 
-export default function TransactionsPage() {
-  const getStatusBadge = (status: Transaction['status']) => {
+// Placeholder data - replace with actual data fetching
+const invoices: Invoice[] = [
+  { id: 'inv-001', partnerId: 'p001', partnerName: 'Innovate Solutions', amount: 2500, status: 'Paid', issueDate: '2023-10-01', dueDate: '2023-10-31' },
+  { id: 'inv-002', partnerId: 'p002', partnerName: 'QuantumLeap Inc.', amount: 5000, status: 'Pending', issueDate: '2023-10-05', dueDate: '2023-11-04' },
+  { id: 'inv-003', partnerId: 'p003', partnerName: 'Synergy Corp', amount: 7500, status: 'Overdue', issueDate: '2023-09-15', dueDate: '2023-10-15' },
+  { id: 'inv-004', partnerId: 'p001', partnerName: 'Innovate Solutions', amount: 3000, status: 'Draft', issueDate: '2023-11-01', dueDate: '2023-12-01' },
+  { id: 'inv-005', partnerId: 'p005', partnerName: 'Starlight Media', amount: 1000, status: 'Paid', issueDate: '2023-10-10', dueDate: '2023-11-09' },
+];
+
+
+export default function InvoicesPage() {
+  const getStatusBadge = (status: Invoice['status']) => {
     switch (status) {
       case 'Paid':
         return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       case 'Pending':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
       case 'Overdue':
-        return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
-      case 'Failed':
         return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+      case 'Draft':
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
     }
@@ -49,8 +62,8 @@ export default function TransactionsPage() {
     <div className="space-y-6">
        <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Transactions</h1>
-          <p className="text-muted-foreground">Monitor all financial activities with partners.</p>
+          <h1 className="text-3xl font-bold">Invoices</h1>
+          <p className="text-muted-foreground">Manage and track all partner invoices.</p>
         </div>
         <div className="flex items-center gap-2">
            <DropdownMenu>
@@ -63,14 +76,12 @@ export default function TransactionsPage() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+                <DropdownMenuLabel>Filter by status</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem checked>
-                  Paid
-                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked>Paid</DropdownMenuCheckboxItem>
                 <DropdownMenuCheckboxItem>Pending</DropdownMenuCheckboxItem>
                 <DropdownMenuCheckboxItem>Overdue</DropdownMenuCheckboxItem>
-                 <DropdownMenuCheckboxItem>Failed</DropdownMenuCheckboxItem>
+                 <DropdownMenuCheckboxItem>Draft</DropdownMenuCheckboxItem>
               </DropdownMenuContent>
             </DropdownMenu>
           <Button size="sm" variant="outline" className="gap-1">
@@ -79,14 +90,20 @@ export default function TransactionsPage() {
               Export CSV
             </span>
           </Button>
+           <Button size="sm" className="gap-1">
+            <PlusCircle className="h-3.5 w-3.5" />
+            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+              New Invoice
+            </span>
+          </Button>
         </div>
       </div>
       
       <Card>
         <CardHeader>
-          <CardTitle>Transaction History</CardTitle>
+          <CardTitle>Invoice History</CardTitle>
           <CardDescription>
-            A detailed log of all payments and receipts.
+            A detailed log of all invoices sent to partners.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -94,26 +111,29 @@ export default function TransactionsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Partner</TableHead>
-                <TableHead className="hidden sm:table-cell">Type</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="hidden md:table-cell">Date</TableHead>
+                <TableHead className="hidden sm:table-cell">Status</TableHead>
+                <TableHead className="hidden md:table-cell">Issue Date</TableHead>
+                <TableHead className="hidden md:table-cell">Due Date</TableHead>
                 <TableHead className="text-right">Amount</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {transactions.map((transaction) => (
-                <TableRow key={transaction.id}>
-                  <TableCell className="font-medium">{transaction.partnerName}</TableCell>
-                  <TableCell className="hidden sm:table-cell">{transaction.type}</TableCell>
+              {invoices.map((invoice) => (
+                <TableRow key={invoice.id}>
                   <TableCell>
-                    <Badge className={cn('text-xs', getStatusBadge(transaction.status))} variant="outline">
-                      {transaction.status}
+                     <div className="font-medium">{invoice.partnerName}</div>
+                     <div className="text-sm text-muted-foreground hidden sm:inline">ID: {invoice.id}</div>
+                  </TableCell>
+                  <TableCell className="hidden sm:table-cell">
+                    <Badge className={cn('text-xs', getStatusBadge(invoice.status))} variant="outline">
+                      {invoice.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="hidden md:table-cell">{transaction.date}</TableCell>
+                  <TableCell className="hidden md:table-cell">{invoice.issueDate}</TableCell>
+                  <TableCell className="hidden md:table-cell">{invoice.dueDate}</TableCell>
                   <TableCell className="text-right">
-                    ${transaction.amount.toLocaleString()}
+                    ${invoice.amount.toLocaleString()}
                   </TableCell>
                    <TableCell className="text-right">
                     <DropdownMenu>
@@ -126,6 +146,11 @@ export default function TransactionsPage() {
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem>View Details</DropdownMenuItem>
                         <DropdownMenuItem>Send Reminder</DropdownMenuItem>
+                        <DropdownMenuItem>Mark as Paid</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="text-destructive">
+                          Void Invoice
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -138,3 +163,4 @@ export default function TransactionsPage() {
     </div>
   );
 }
+

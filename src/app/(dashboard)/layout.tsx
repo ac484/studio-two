@@ -7,7 +7,7 @@ import {
   BriefcaseBusiness,
   LayoutDashboard,
   Users,
-  Wallet,
+  FileText,
   Bot,
   Settings,
   LogOut,
@@ -40,7 +40,7 @@ import { users } from '@/lib/placeholder-data';
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/partners', icon: Users, label: 'Partners' },
-  { href: '/transactions', icon: Wallet, label: 'Transactions' },
+  { href: '/invoices', icon: FileText, label: 'Invoices' },
   { href: '/optimize', icon: Bot, label: 'AI Optimizer' },
   { href: '/settings', icon: Settings, label: 'Settings' },
 ];
@@ -68,7 +68,7 @@ export default function DashboardLayout({
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname === item.href}
+                  isActive={pathname.startsWith(item.href)}
                   tooltip={item.label}
                 >
                   <Link href={item.href}>
