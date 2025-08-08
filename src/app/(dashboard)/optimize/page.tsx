@@ -17,6 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { partners } from '@/lib/placeholder-data';
+import type { Partner } from '@/lib/types';
 
 
 const FormSchema = z.object({
@@ -31,12 +32,12 @@ const FormSchema = z.object({
 type FormData = z.infer<typeof FormSchema>;
 
 // Helper to generate placeholder text from partner data
-const generateRiskProfilePlaceholder = (partner: any) => {
+const generateRiskProfilePlaceholder = (partner: Partner | undefined) => {
   if (!partner) return "e.g., Credit score: 750, Industry: Stable tech sector, Financial health: Positive cash flow...";
   return `Industry: ${partner.industry}. Status: ${partner.status}. Joined on: ${partner.joinedDate}. A solid partner with a good standing.`;
 }
 
-const generateTransactionHistoryPlaceholder = (partner: any) => {
+const generateTransactionHistoryPlaceholder = (partner: Partner | undefined) => {
     if (!partner) return "e.g., Consistent on-time payments, average transaction $5,000, 3 years of partnership...";
     return `Partner since ${partner.joinedDate}. Consistently reliable. No major issues reported in transaction history.`;
 }

@@ -33,7 +33,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { partners } from '@/lib/placeholder-data';
 import { cn } from '@/lib/utils';
-import { MoreHorizontal, PlusCircle, Search, User } from 'lucide-react';
+import { MoreHorizontal, PlusCircle, Search } from 'lucide-react';
 
 export default function PartnersPage() {
   const router = useRouter();
@@ -88,53 +88,62 @@ export default function PartnersPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Company</TableHead>
-                <TableHead className="hidden sm:table-cell">Contact Person</TableHead>
+                <TableHead className="hidden sm:table-cell">Primary Contact</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="hidden md:table-cell">Joined On</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {partners.map((partner) => (
-                <TableRow key={partner.id} onClick={() => handleRowClick(partner.id)} className="cursor-pointer">
-                  <TableCell>
-                    <div className="font-medium">{partner.companyName}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {partner.industry}
-                    </div>
-                  </TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    <div className="font-medium">{partner.contactPerson}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {partner.contactEmail}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={cn('text-xs', getStatusBadge(partner.status))} variant="outline">
-                      {partner.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">{partner.joinedDate}</TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onSelect={() => router.push(`/partners/${partner.id}`)}>View Details</DropdownMenuItem>
-                        <DropdownMenuItem>Edit Profile</DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-destructive">
-                          Deactivate
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {partners.map((partner) => {
+                const primaryContact = partner.contacts.find(c => c.isPrimary);
+                return (
+                  <TableRow key={partner.id} onClick={() => handleRowClick(partner.id)} className="cursor-pointer">
+                    <TableCell>
+                      <div className="font-medium">{partner.companyName}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {partner.industry}
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell">
+                      {primaryContact ? (
+                        <>
+                          <div className="font-medium">{primaryContact.name}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {primaryContact.email}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="text-sm text-muted-foreground">N/A</div>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={cn('text-xs', getStatusBadge(partner.status))} variant="outline">
+                        {partner.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">{partner.joinedDate}</TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem onSelect={() => router.push(`/partners/${partner.id}`)}>View Details</DropdownMenuItem>
+                          <DropdownMenuItem>Edit Profile</DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="text-destructive">
+                            Deactivate
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
             </TableBody>
           </Table>
         </CardContent>

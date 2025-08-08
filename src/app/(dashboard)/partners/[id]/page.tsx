@@ -40,6 +40,7 @@ export default function PartnerDetailPage() {
 
   const partner = partners.find((p) => p.id === partnerId);
   const partnerInvoices = allInvoices.filter((p) => p.partnerId === partnerId);
+  const primaryContact = partner?.contacts.find(c => c.isPrimary);
 
   const [assignedWorkflow, setAssignedWorkflow] = React.useState<string | undefined>(undefined);
 
@@ -98,19 +99,23 @@ export default function PartnerDetailPage() {
         <Card className="lg:col-span-1">
           <CardHeader>
             <CardTitle>Partner Information</CardTitle>
-            <CardDescription>Contact and industry details.</CardDescription>
+            <CardDescription>Contact and company details.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 text-sm">
-            <div className="grid grid-cols-2">
-              <span className="font-semibold text-muted-foreground">Contact</span>
-              <span>{partner.contactPerson}</span>
-            </div>
-            <div className="grid grid-cols-2">
-              <span className="font-semibold text-muted-foreground">Email</span>
-              <a href={`mailto:${partner.contactEmail}`} className="text-primary hover:underline">
-                {partner.contactEmail}
-              </a>
-            </div>
+             {primaryContact && (
+              <div className="grid grid-cols-2">
+                <span className="font-semibold text-muted-foreground">Primary Contact</span>
+                <span>{primaryContact.name} ({primaryContact.role})</span>
+              </div>
+            )}
+             {primaryContact && (
+              <div className="grid grid-cols-2">
+                <span className="font-semibold text-muted-foreground">Email</span>
+                <a href={`mailto:${primaryContact.email}`} className="text-primary hover:underline">
+                  {primaryContact.email}
+                </a>
+              </div>
+            )}
             <div className="grid grid-cols-2">
               <span className="font-semibold text-muted-foreground">Industry</span>
               <span>{partner.industry}</span>

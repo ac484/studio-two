@@ -4,47 +4,65 @@ export const partners: Partner[] = [
   {
     id: 'p001',
     companyName: 'Innovate Solutions',
-    contactPerson: 'Alice Johnson',
-    contactEmail: 'alice.j@innovate.com',
     status: 'Active',
     joinedDate: '2023-01-15',
     industry: 'Technology',
+    address: '123 Tech Park, Silicon Valley, CA 94000',
+    website: 'innovate.com',
+    contacts: [
+      { id: 'c001', name: 'Alice Johnson', role: 'CEO', email: 'alice.j@innovate.com', phone: '111-222-3333', isPrimary: true },
+      { id: 'c002', name: 'David Chen', role: 'Billing Specialist', email: 'david.c@innovate.com', phone: '111-222-3334', isPrimary: false },
+    ]
   },
   {
     id: 'p002',
     companyName: 'QuantumLeap Inc.',
-    contactPerson: 'Bob Williams',
-    contactEmail: 'bob.w@quantumleap.com',
     status: 'Active',
     joinedDate: '2022-11-20',
     industry: 'Finance',
+     address: '456 Finance Ave, New York, NY 10001',
+    website: 'quantumleap.com',
+    contacts: [
+      { id: 'c003', name: 'Bob Williams', role: 'Account Manager', email: 'bob.w@quantumleap.com', phone: '222-333-4444', isPrimary: true },
+    ]
   },
   {
     id: 'p003',
     companyName: 'Synergy Corp',
-    contactPerson: 'Charlie Brown',
-    contactEmail: 'charlie.b@synergy.com',
     status: 'Pending',
     joinedDate: '2023-05-10',
     industry: 'Healthcare',
+    address: '789 Health Blvd, Boston, MA 02101',
+    website: 'synergy.com',
+    contacts: [
+      { id: 'c004', name: 'Charlie Brown', role: 'Project Manager', email: 'charlie.b@synergy.com', phone: '333-444-5555', isPrimary: true },
+       { id: 'c005', name: 'Grace Lee', role: 'Legal Counsel', email: 'grace.l@synergy.com', phone: '333-444-5556', isPrimary: false },
+    ]
   },
   {
     id: 'p004',
     companyName: 'Apex Logistics',
-    contactPerson: 'Diana Prince',
-    contactEmail: 'diana.p@apex.com',
     status: 'Inactive',
     joinedDate: '2021-08-01',
     industry: 'Logistics',
+     address: '101 Supply Chain, Houston, TX 77001',
+    website: 'apexlogistics.com',
+    contacts: [
+      { id: 'c006', name: 'Diana Prince', role: 'Operations Head', email: 'diana.p@apex.com', phone: '444-555-6666', isPrimary: true },
+    ]
   },
   {
     id: 'p005',
     companyName: 'Starlight Media',
-    contactPerson: 'Ethan Hunt',
-    contactEmail: 'ethan.h@starlight.com',
     status: 'Active',
     joinedDate: '2023-03-22',
     industry: 'Media',
+    address: '202 Creative Way, Los Angeles, CA 90001',
+    website: 'starlightmedia.com',
+    contacts: [
+      { id: 'c007', name: 'Ethan Hunt', role: 'Creative Director', email: 'ethan.h@starlight.com', phone: '555-666-7777', isPrimary: true },
+      { id: 'c008', name: 'Frank Miller', role: 'Producer', email: 'frank.m@starlight.com', phone: '555-666-7788', isPrimary: false },
+    ]
   },
 ];
 
