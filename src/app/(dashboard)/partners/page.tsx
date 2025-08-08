@@ -33,7 +33,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { partners } from '@/lib/placeholder-data';
 import { cn } from '@/lib/utils';
-import { MoreHorizontal, PlusCircle, Search } from 'lucide-react';
+import { MoreHorizontal, PlusCircle, Search, User } from 'lucide-react';
 
 export default function PartnersPage() {
   const router = useRouter();
@@ -88,7 +88,7 @@ export default function PartnersPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Company</TableHead>
-                <TableHead className="hidden sm:table-cell">Industry</TableHead>
+                <TableHead className="hidden sm:table-cell">Contact Person</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="hidden md:table-cell">Joined On</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -100,10 +100,15 @@ export default function PartnersPage() {
                   <TableCell>
                     <div className="font-medium">{partner.companyName}</div>
                     <div className="text-sm text-muted-foreground">
+                      {partner.industry}
+                    </div>
+                  </TableCell>
+                  <TableCell className="hidden sm:table-cell">
+                    <div className="font-medium">{partner.contactPerson}</div>
+                    <div className="text-sm text-muted-foreground">
                       {partner.contactEmail}
                     </div>
                   </TableCell>
-                  <TableCell className="hidden sm:table-cell">{partner.industry}</TableCell>
                   <TableCell>
                     <Badge className={cn('text-xs', getStatusBadge(partner.status))} variant="outline">
                       {partner.status}
