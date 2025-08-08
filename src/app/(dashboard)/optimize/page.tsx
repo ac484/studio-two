@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { handleOptimizePaymentTerms } from '@/app/actions';
 import { type OptimizePaymentTermsOutput } from '@/ai/flows/optimize-payment-terms';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/hooks/use-toast';
 
 const FormSchema = z.object({
   partnerRiskProfile: z
@@ -28,7 +29,7 @@ type FormData = z.infer<typeof FormSchema>;
 export default function OptimizePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<OptimizePaymentTermsOutput | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
@@ -41,21 +42,29 @@ export default function OptimizePage() {
   async function onSubmit(data: FormData) {
     setIsLoading(true);
     setResult(null);
-    setError(null);
     
-    const response = await handleOptimizePaymentTerms(data);
+    try {
+        const response = await handleOptimizePaymentTerms(data);
 
-    if (response.success && response.data) {
-      setResult(response.data);
-    } else {
-      let errorMessage = "An unexpected error occurred.";
-      if (typeof response.error === 'string') {
-        errorMessage = response.error;
-      } else if (response.error?.formErrors?.length) {
-        errorMessage = response.error.formErrors.join(', ');
-      }
-      setError(errorMessage);
+        if (response.success && response.data) {
+          setResult(response.data);
+        } else {
+          const errorMessage = response.error || 'An unexpected error occurred.';
+          toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: errorMessage,
+          });
+        }
+    } catch (e: any) {
+         toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: e.message || 'An unexpected error occurred while calling the AI.',
+        });
     }
+
+
     setIsLoading(false);
   }
 
@@ -145,9 +154,9 @@ export default function OptimizePage() {
              </CardHeader>
              <CardContent className="text-sm">
                 {isLoading && <div className="space-y-2"><Skeleton className="h-4 w-3/4" /><Skeleton className="h-4 w-1/2" /></div>}
-                {error && <p className="text-destructive">{error}</p>}
+                
                 {result && <p>{result.suggestedPaymentTerms}</p>}
-                {!isLoading && !result && !error && <p className="text-muted-foreground">AI recommendations will appear here.</p>}
+                {!isLoading && !result && <p className="text-muted-foreground">AI recommendations will appear here.</p>}
              </CardContent>
            </Card>
            
@@ -162,7 +171,7 @@ export default function OptimizePage() {
              <CardContent className="text-sm">
                 {isLoading && <div className="space-y-2"><Skeleton className="h-4 w-3/4" /><Skeleton className="h-4 w-1/2" /></div>}
                 {result && <p>{result.riskMitigationStrategies}</p>}
-                {!isLoading && !result && !error && <p className="text-muted-foreground">AI recommendations will appear here.</p>}
+                {!isLoading && !result && <p className="text-muted-foreground">AI recommendations will appear here.</p>}
              </CardContent>
            </Card>
         </div>
