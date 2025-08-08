@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * @fileOverview A payment term optimization AI agent.
+ * @fileOverview A payment term optimization AI agent that designs state machine-based workflows.
  *
  * - optimizePaymentTerms - A function that suggests optimal payment terms.
  * - OptimizePaymentTermsInput - The input type for the optimizePaymentTerms function.
@@ -21,13 +21,22 @@ const OptimizePaymentTermsInputSchema = z.object({
 });
 export type OptimizePaymentTermsInput = z.infer<typeof OptimizePaymentTermsInputSchema>;
 
+const StateSchema = z.object({
+  name: z.string().describe("The name of the state (e.g., 'Invoice Sent', 'Payment Received')."),
+  description: z.string().describe('A brief description of what this state represents.'),
+});
+
+const TriggerSchema = z.object({
+    name: z.string().describe("The name of the trigger that causes a state transition (e.g., 'Receive Payment', 'Milestone Approved')."),
+    from: z.string().describe('The state from which this trigger originates.'),
+    to: z.string().describe('The state to which this trigger leads.'),
+});
+
 const OptimizePaymentTermsOutputSchema = z.object({
-  suggestedPaymentTerms: z
-    .string()
-    .describe('The suggested payment terms, including payment frequency, due date, and any discounts or penalties.'),
-  riskMitigationStrategies: z
-    .string()
-    .describe('Strategies to mitigate financial risk, such as requiring a security deposit or shortening the payment cycle.'),
+  suggestedPlanName: z.string().describe("A descriptive name for the suggested payment plan (e.g., 'Secure Milestone Plan', 'Quarterly Net-60')."),
+  states: z.array(StateSchema).describe('An array of all possible states in the payment workflow state machine.'),
+  triggers: z.array(TriggerSchema).describe('An array of all possible triggers that transition between states.'),
+  summary: z.string().describe('A human-readable summary explaining the logic behind the suggested plan.'),
 });
 export type OptimizePaymentTermsOutput = z.infer<typeof OptimizePaymentTermsOutputSchema>;
 
@@ -39,12 +48,22 @@ const prompt = ai.definePrompt({
   name: 'optimizePaymentTermsPrompt',
   input: {schema: OptimizePaymentTermsInputSchema},
   output: {schema: OptimizePaymentTermsOutputSchema},
-  prompt: `You are a financial risk management expert. Based on the partner's risk profile and transaction history, you will suggest optimal payment terms and risk mitigation strategies to minimize financial risk.
+  prompt: `You are an expert financial workflow architect specializing in designing state machine-based payment plans for B2B partnerships.
 
-Partner Risk Profile: {{{partnerRiskProfile}}}
-Transaction History: {{{transactionHistory}}}
+Based on the provided partner risk profile and transaction history, design a custom, state-driven payment workflow. The workflow should be represented as a state machine with a clear set of states and triggers for transitions.
 
-Consider all available information to provide comprehensive and actionable recommendations.
+**Partner Risk Profile:**
+{{{partnerRiskProfile}}}
+
+**Transaction History:**
+{{{transactionHistory}}}
+
+**Your Task:**
+1.  **Define States:** Create a list of clear, logical states for the entire payment lifecycle. Examples include 'Awaiting Down Payment', 'Milestone 1: In Progress', 'Milestone 1: Invoice Sent', 'Final Payment Received', 'Completed'.
+2.  **Define Triggers:** Specify the triggers that cause transitions between these states. Examples include 'Down Payment Confirmed', 'Milestone 1 Approved by Partner', 'Final Invoice Paid'.
+3.  **Create a Plan:** Name the plan descriptively and provide a summary explaining why this state machine structure is optimal for the given partner, considering their risk and history.
+
+The goal is to create a robust, traceable, and automated workflow that minimizes financial risk while maintaining a good partner relationship.
 `,
 });
 
@@ -59,4 +78,3 @@ const optimizePaymentTermsFlow = ai.defineFlow(
     return output!;
   }
 );
-

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Bot, Loader2, ThumbsUp, ShieldAlert, Sparkles } from 'lucide-react';
+import { Bot, Loader2, ThumbsUp, ShieldAlert, Sparkles, Workflow, GitBranch, KeySquare } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +14,7 @@ import { handleOptimizePaymentTerms } from '@/app/actions';
 import { type OptimizePaymentTermsOutput } from '@/ai/flows/optimize-payment-terms';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
 
 const FormSchema = z.object({
   partnerRiskProfile: z
@@ -75,9 +76,9 @@ export default function OptimizePage() {
           <Bot className="h-6 w-6 text-primary" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold">AI Payment Term Optimizer</h1>
+          <h1 className="text-3xl font-bold">AI Workflow Architect</h1>
           <p className="text-muted-foreground">
-            Leverage AI to get optimal payment terms based on partner risk profiles and transaction history.
+            Generate custom, state machine-based payment workflows using AI.
           </p>
         </div>
       </div>
@@ -129,12 +130,12 @@ export default function OptimizePage() {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Analyzing...
+                      Designing Workflow...
                     </>
                   ) : (
                     <>
                      <Sparkles className="mr-2 h-4 w-4" />
-                      Generate Suggestions
+                      Generate Workflow
                     </>
                   )}
                 </Button>
@@ -143,35 +144,49 @@ export default function OptimizePage() {
           </CardContent>
         </Card>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
            <Card>
-             <CardHeader className="flex flex-row items-center gap-4 space-y-0">
-               <ThumbsUp className="h-6 w-6 text-green-500" />
-               <div>
-                  <CardTitle>Suggested Payment Terms</CardTitle>
-                  <CardDescription>Optimal terms to improve cash flow.</CardDescription>
-                </div>
-             </CardHeader>
-             <CardContent className="text-sm">
-                {isLoading && <div className="space-y-2"><Skeleton className="h-4 w-3/4" /><Skeleton className="h-4 w-1/2" /></div>}
-                
-                {result && <p>{result.suggestedPaymentTerms}</p>}
-                {!isLoading && !result && <p className="text-muted-foreground">AI recommendations will appear here.</p>}
-             </CardContent>
-           </Card>
-           
-           <Card>
-             <CardHeader className="flex flex-row items-center gap-4 space-y-0">
-               <ShieldAlert className="h-6 w-6 text-orange-500" />
-               <div>
-                 <CardTitle>Risk Mitigation Strategies</CardTitle>
-                 <CardDescription>Actions to minimize financial risk.</CardDescription>
+             <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
+               <div className="flex items-center gap-4">
+                 <Workflow className="h-6 w-6 text-primary" />
+                 <div>
+                    <CardTitle>Suggested Workflow</CardTitle>
+                    <CardDescription>A custom state machine for this partner.</CardDescription>
+                  </div>
                </div>
+               {result && <Button variant="outline" size="sm">Save Workflow</Button>}
              </CardHeader>
-             <CardContent className="text-sm">
-                {isLoading && <div className="space-y-2"><Skeleton className="h-4 w-3/4" /><Skeleton className="h-4 w-1/2" /></div>}
-                {result && <p>{result.riskMitigationStrategies}</p>}
-                {!isLoading && !result && <p className="text-muted-foreground">AI recommendations will appear here.</p>}
+             <CardContent className="space-y-4">
+                {isLoading && <div className="space-y-2"><Skeleton className="h-6 w-1/2" /><Skeleton className="h-4 w-3/4" /></div>}
+                
+                {result && (
+                  <div>
+                    <h3 className="font-semibold text-lg">{result.suggestedPlanName}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">{result.summary}</p>
+                  </div>
+                )}
+                {!isLoading && !result && <p className="text-sm text-muted-foreground">AI-generated workflow will appear here.</p>}
+                
+                {result && (
+                  <div className="space-y-4 pt-4">
+                    <div>
+                      <h4 className="font-medium flex items-center gap-2"><GitBranch className="h-4 w-4" /> States</h4>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {isLoading && <Skeleton className="h-6 w-24" />}
+                        {result.states.map(state => <Badge key={state.name} variant="secondary" title={state.description}>{state.name}</Badge>)}
+                      </div>
+                    </div>
+                     <div>
+                      <h4 className="font-medium flex items-center gap-2"><KeySquare className="h-4 w-4" /> Triggers</h4>
+                       <div className="flex flex-wrap gap-2 mt-2">
+                        {isLoading && <Skeleton className="h-6 w-24" />}
+                        {result.triggers.map(trigger => <Badge key={trigger.name} variant="outline" title={`${trigger.from} → ${trigger.to}`}>{trigger.name}</Badge>)}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+
              </CardContent>
            </Card>
         </div>
