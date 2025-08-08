@@ -2,8 +2,9 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { ChevronLeft, MoreVertical, FileText } from 'lucide-react';
+import { ChevronLeft, MoreVertical, FileText, Bot } from 'lucide-react';
 import { partners, invoices as allInvoices } from '@/lib/placeholder-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -122,9 +123,17 @@ export default function PartnerDetailPage() {
         </Card>
 
         <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Payment Workflow</CardTitle>
-            <CardDescription>Assign and manage the payment schedule for this partner.</CardDescription>
+           <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+                <CardTitle>Payment Workflow</CardTitle>
+                <CardDescription>Manage the payment schedule for this partner.</CardDescription>
+            </div>
+             <Button asChild variant="outline" size="sm">
+                <Link href={`/optimize?partnerId=${partner.id}`}>
+                    <Bot className="mr-2 h-4 w-4" />
+                    AI Optimize Workflow
+                </Link>
+             </Button>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
