@@ -1,3 +1,4 @@
+
 import {
   Tabs,
   TabsContent,
@@ -30,8 +31,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { MoreHorizontal, PlusCircle, Settings, Bell, CreditCard } from 'lucide-react';
+import { MoreHorizontal, PlusCircle, Settings, Bell, CreditCard, Pencil, Trash2 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+
+// Placeholder for workflow data
+const workflows = [
+  { id: 'wf-001', name: 'Monthly Recurring', description: 'Standard 30-day net payment, invoiced monthly.', steps: 12 },
+  { id: 'wf-002', name: 'Quarterly Billing', description: 'Invoiced every three months.', steps: 4 },
+  { id: 'wf-003', name: 'Milestone-Based', description: 'Payment triggered upon project milestone completion.', steps: 5 },
+  { id: 'wf-004', name: 'Annual Upfront', description: 'Full payment required at the start of the contract.', steps: 1 },
+];
+
 
 export default function SettingsPage() {
   return (
@@ -141,41 +151,43 @@ export default function SettingsPage() {
              <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle>Payment Workflows</CardTitle>
-                <CardDescription>Automate your payment processes.</CardDescription>
+                <CardDescription>Define and manage templates for your payment schedules.</CardDescription>
               </div>
               <Button>
                 <PlusCircle className="mr-2 h-4 w-4" />
                 New Workflow
               </Button>
             </CardHeader>
-            <CardContent className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <Card>
-                <CardHeader className="flex-row items-center gap-4">
-                  <CreditCard className="h-8 w-8 text-primary" />
-                  <CardTitle>Standard Net 30</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">Payment due 30 days after invoice. Automated reminders at 15 and 3 days before due date.</p>
-                </CardContent>
-              </Card>
-               <Card>
-                <CardHeader className="flex-row items-center gap-4">
-                  <CreditCard className="h-8 w-8 text-primary" />
-                  <CardTitle>Upfront Payment</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">Requires full payment before services are rendered. Ideal for new partners.</p>
-                </CardContent>
-              </Card>
-               <Card>
-                <CardHeader className="flex-row items-center gap-4">
-                  <CreditCard className="h-8 w-8 text-primary" />
-                  <CardTitle>Milestone-Based</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">Payments are triggered upon completion of project milestones. Good for long-term projects.</p>
-                </CardContent>
-              </Card>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead className="hidden sm:table-cell">Description</TableHead>
+                    <TableHead className="text-center hidden md:table-cell">Steps</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {workflows.map((workflow) => (
+                    <TableRow key={workflow.id}>
+                      <TableCell className="font-medium">{workflow.name}</TableCell>
+                      <TableCell className="hidden sm:table-cell text-muted-foreground">{workflow.description}</TableCell>
+                      <TableCell className="text-center hidden md:table-cell">{workflow.steps}</TableCell>
+                      <TableCell className="text-right">
+                         <Button variant="ghost" size="icon">
+                           <Pencil className="h-4 w-4" />
+                           <span className="sr-only">Edit</span>
+                         </Button>
+                         <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+                           <Trash2 className="h-4 w-4" />
+                           <span className="sr-only">Delete</span>
+                         </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
         </TabsContent>
