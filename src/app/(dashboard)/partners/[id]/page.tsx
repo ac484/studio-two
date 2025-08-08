@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ChevronLeft, MoreVertical, FileText } from 'lucide-react';
-import { partners } from '@/lib/placeholder-data';
+import { partners, invoices as allInvoices } from '@/lib/placeholder-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { type Invoice } from '@/lib/types';
 
 // Placeholder for workflow data - in a real app, this would be fetched
 const workflows = [
@@ -31,21 +32,14 @@ const workflows = [
   { id: 'wf-004', name: 'Annual Upfront' },
 ];
 
-// Placeholder for invoices - in a real app, this would be filtered by partnerId
-const allInvoices = [
-  { id: 'inv-001', partnerId: 'p001', amount: 2500, status: 'Paid', issueDate: '2023-10-01', dueDate: '2023-10-31' },
-  { id: 'inv-004', partnerId: 'p001', amount: 3000, status: 'Draft', issueDate: '2023-11-01', dueDate: '2023-12-01' },
-  { id: 'inv-002', partnerId: 'p002', amount: 5000, status: 'Pending', issueDate: '2023-10-05', dueDate: '2023-11-04' },
-];
-
 export default function PartnerDetailPage() {
   const router = useRouter();
   const params = useParams();
   const partnerId = params.id as string;
 
   const partner = partners.find((p) => p.id === partnerId);
-  const partnerInvoices = allInvoices.filter(p => p.partnerId === partnerId);
-  
+  const partnerInvoices = allInvoices.filter((p) => p.partnerId === partnerId);
+
   const [assignedWorkflow, setAssignedWorkflow] = React.useState<string | undefined>(undefined);
 
   if (!partner) {
@@ -59,7 +53,7 @@ export default function PartnerDetailPage() {
     );
   }
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: Invoice['status']) => {
     switch (status) {
       case 'Paid': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       case 'Pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
@@ -68,7 +62,6 @@ export default function PartnerDetailPage() {
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
     }
   };
-
 
   return (
     <div className="space-y-6">

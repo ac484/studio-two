@@ -1,4 +1,4 @@
-import type { Partner, Transaction, User } from './types';
+import type { Partner, Transaction, User, Invoice } from './types';
 
 export const partners: Partner[] = [
   {
@@ -127,4 +127,12 @@ export const users: User[] = [
     role: 'Viewer',
     avatarUrl: 'https://placehold.co/40x40.png',
   },
+];
+
+export const invoices: Invoice[] = [
+  { id: 'inv-001', partnerId: 'p001', partnerName: 'Innovate Solutions', amount: 2500, status: 'Paid', issueDate: '2023-10-01', dueDate: '2023-10-31' },
+  { id: 'inv-002', partnerId: 'p002', partnerName: 'QuantumLeap Inc.', amount: 5000, status: 'Pending', issueDate: '2023-10-05', dueDate: '2023-11-04' },
+  { id: 'inv-003', partnerId: 'p003', partnerName: 'Synergy Corp', amount: 7500, status: 'Overdue', issueDate: '2023-09-15', dueDate: '2023-10-15' },
+  { id: 'inv-004', partnerId: 'p001', partnerName: 'Innovate Solutions', amount: 3000, status: 'Draft', issueDate: '2023-11-01', dueDate: '2023-12-01' },
+  { id: 'inv-005', partnerId: 'p005', partnerName: 'Starlight Media', amount: 1000, status: 'Paid', issueDate: '2023-10-10', dueDate: '2023-11-09' },
 ];

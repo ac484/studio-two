@@ -31,15 +31,7 @@ import {
 import { MoreHorizontal, File, ListFilter, PlusCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { type Invoice } from '@/lib/types';
-
-// Placeholder data - replace with actual data fetching
-const invoices: Invoice[] = [
-  { id: 'inv-001', partnerId: 'p001', partnerName: 'Innovate Solutions', amount: 2500, status: 'Paid', issueDate: '2023-10-01', dueDate: '2023-10-31' },
-  { id: 'inv-002', partnerId: 'p002', partnerName: 'QuantumLeap Inc.', amount: 5000, status: 'Pending', issueDate: '2023-10-05', dueDate: '2023-11-04' },
-  { id: 'inv-003', partnerId: 'p003', partnerName: 'Synergy Corp', amount: 7500, status: 'Overdue', issueDate: '2023-09-15', dueDate: '2023-10-15' },
-  { id: 'inv-004', partnerId: 'p001', partnerName: 'Innovate Solutions', amount: 3000, status: 'Draft', issueDate: '2023-11-01', dueDate: '2023-12-01' },
-  { id: 'inv-005', partnerId: 'p005', partnerName: 'Starlight Media', amount: 1000, status: 'Paid', issueDate: '2023-10-10', dueDate: '2023-11-09' },
-];
+import { invoices } from '@/lib/placeholder-data';
 
 
 export default function InvoicesPage() {
@@ -86,7 +78,7 @@ export default function InvoicesPage() {
             </DropdownMenu>
           <Button size="sm" variant="outline" className="gap-1">
             <File className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+            <span className="sr-only sm:not-sr-only sm:whitespace-rap">
               Export CSV
             </span>
           </Button>
@@ -163,4 +155,3 @@ export default function InvoicesPage() {
     </div>
   );
 }
-
