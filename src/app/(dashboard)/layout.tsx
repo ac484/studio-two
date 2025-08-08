@@ -39,10 +39,10 @@ import { users } from '@/lib/placeholder-data';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { href: '/dashboard/partners', icon: Users, label: 'Partners' },
-  { href: '/dashboard/transactions', icon: Wallet, label: 'Transactions' },
-  { href: '/dashboard/optimize', icon: Bot, label: 'AI Optimizer' },
-  { href: '/dashboard/settings', icon: Settings, label: 'Settings' },
+  { href: '/partners', icon: Users, label: 'Partners' },
+  { href: '/transactions', icon: Wallet, label: 'Transactions' },
+  { href: '/optimize', icon: Bot, label: 'AI Optimizer' },
+  { href: '/settings', icon: Settings, label: 'Settings' },
 ];
 
 export default function DashboardLayout({
