@@ -1,3 +1,10 @@
+
+'use client';
+
+import * as React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
 import {
   Card,
   CardContent,
@@ -29,6 +36,8 @@ import { cn } from '@/lib/utils';
 import { MoreHorizontal, PlusCircle, Search } from 'lucide-react';
 
 export default function PartnersPage() {
+  const router = useRouter();
+
   const getStatusBadge = (status: 'Active' | 'Inactive' | 'Pending') => {
     switch (status) {
       case 'Active':
@@ -40,6 +49,10 @@ export default function PartnersPage() {
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
     }
+  };
+
+  const handleRowClick = (partnerId: string) => {
+    router.push(`/partners/${partnerId}`);
   };
 
   return (
@@ -83,7 +96,7 @@ export default function PartnersPage() {
             </TableHeader>
             <TableBody>
               {partners.map((partner) => (
-                <TableRow key={partner.id}>
+                <TableRow key={partner.id} onClick={() => handleRowClick(partner.id)} className="cursor-pointer">
                   <TableCell>
                     <div className="font-medium">{partner.companyName}</div>
                     <div className="text-sm text-muted-foreground">
@@ -99,14 +112,14 @@ export default function PartnersPage() {
                   <TableCell className="hidden md:table-cell">{partner.joinedDate}</TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
+                      <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                         <Button variant="ghost" size="icon">
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>View Details</DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => router.push(`/partners/${partner.id}`)}>View Details</DropdownMenuItem>
                         <DropdownMenuItem>Edit Profile</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="text-destructive">
